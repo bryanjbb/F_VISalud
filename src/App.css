@@ -18,3 +18,19 @@ background-image: linear-gradient(90deg, #FFE53B 0%, #FF2525 74%);
 .table-striped tbody tr:nth-of-type(even) {
   background-color: #ffffff;
 }
+/* Animacion de los botones */
+.btn-animado {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-animado:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+/* Animacion de las lineas de la tabla */
+.table-hover tbody tr:hover {
+  transform: scale(1.0);
+  background-color: #e6f2ff !important;
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}

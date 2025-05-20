@@ -32,7 +32,7 @@ const TablaProductos = ({
             <th>Laboratorio</th>
             <th>Presentación</th>
             <th>Vencimiento</th>
-            <th>Precio Unitario</th>
+            <th>Precio</th>
             <th>Stock</th>
             <th>Imagen</th>
             <th>Acciones</th>
@@ -46,25 +46,24 @@ const TablaProductos = ({
               <td>{producto.nombre_laboratorio || 'N/A'}</td>
               <td>{producto.nombre_presentacion || 'N/A'}</td>
               <td>{new Date(producto.vencimiento).toLocaleDateString('en-ES')}</td>
-              <td>$ {parseFloat(producto.precio_unitario).toFixed(2)}</td>
+              <td>{parseFloat(producto.precio_unitario).toFixed(2)}</td>
               <td>{producto.stock}</td>
               <td>
                 {producto.imagen_url ? (
-                  <Image
-                    src={producto.imagen_url}
-                    alt="Imagen del producto"
-                    thumbnail
-                    style={{ width: '60px', height: '60px', objectFit: 'cover' }}
+                  <img
+                    src={`data:image/png;base64,${producto.imagen}`}
+                    alt={producto.nombre_producto}
+                    style={{ maxWidth: '100px' }}
                   />
                 ) : (
                   'Sin imagen'
                 )}
-              </td> 
+              </td>
               <td className="text-center" style={{ whiteSpace: 'nowrap' }} > 
                 <Button
                   variant="outline-warning"
                   size="sm"
-                  className="me-2"
+                  className="me-2 btn-animado"
                   onClick={() => abrirModalEdicion(producto)}
                 >
                   <i className="bi bi-pencil"></i>
@@ -72,6 +71,7 @@ const TablaProductos = ({
                 <Button
                   variant="outline-danger"
                   size="sm"
+                  className='btn-animado'
                   onClick={() => abrirModalEliminacion(producto)}
                 >
                   <i className="bi bi-trash"></i>
@@ -81,15 +81,7 @@ const TablaProductos = ({
           ))}
         </tbody>
       </Table>
-
-      {totalElementos > elementosPorPagina && (
-        <Paginacion
-          totalElementos={totalElementos}
-          elementosPorPagina={elementosPorPagina}
-          paginaActual={paginaActual}
-          onPageChange={establecerPaginaActual}
-        />
-      )}
+  
     </>
   );
 };

@@ -115,11 +115,16 @@ const Laboratorios = () => {
   };
 
   const manejarCambioBusqueda = (e) => {
-    const texto = e.target.value.toLowerCase();
+    const texto = e.target.value.toLowerCase()//Cambia las mayusculas por minusculas 
+    .normalize("NFD")// Descompone caracteres acentuados
+    .replace(/[\u0300-\u036f]/g, ""); // Elimina los signos diacríticos (tildes);
     setTextoBusqueda(texto);
-    const filtrados = listaLaboratorios.filter(lab =>
-      lab.nombre_laboratorio?.toLowerCase().includes(texto)
-    );
+    const filtrados = listaLaboratorios.filter(laboratorio => {
+      const id = (laboratorio.id_laboratorio || '').toString();
+      const nombre = (laboratorio.nombre_laboratorio || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      return id.includes(texto) || nombre.includes(texto);
+    });
+
     setLaboratoriosFiltrados(filtrados);
     establecerPaginaActual(1);
   };
@@ -138,7 +143,7 @@ const Laboratorios = () => {
 
   return (
     <>
-      <Container className="mt-5">
+      <Container className="mt-1" style={{ paddingBottom: '10px' }}>
         <h4>Laboratorios</h4>
         <Row>
           <Col lg={3}>
@@ -188,18 +193,7 @@ const Laboratorios = () => {
         />
       </Container>
 
-      <div style={{
-        position: "fixed",
-        bottom: 0,
-        width: "100%",
-        backgroundColor: "white",
-        padding: "10px 0",
-        boxShadow: "0 -2px 10px rgba(0,0,0,0.1)",
-        zIndex: 1000,
-        textAlign: "center"
-      }}>
-      
-      </div>
+  
     </>
   );
 };

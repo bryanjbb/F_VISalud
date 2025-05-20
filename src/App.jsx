@@ -6,6 +6,8 @@ import Encabezado from "./components/encabezado/Encabezado";
 import Productos from "./views/Productos";
 import Laboratorios from "./views/Laboratorio";
 import Presentaciones from "./views/Presentacion";
+import Ventas from "./views/Ventas";
+import Estadisticas from "./views/Estadisticas";
 
 import './App.css';
 
@@ -23,6 +25,10 @@ const App = () => {
         <Route path="/productos" element={<Productos />} />
         <Route path="/laboratorios" element={<Laboratorios />} />
         <Route path="/presentaciones" element={<Presentaciones />} />
+        <Route path="/ventas" element={<Ventas />} />
+         <Route path="/estadisticas" element={<Estadisticas />} />
+
+
 
         </Routes>
       </main>

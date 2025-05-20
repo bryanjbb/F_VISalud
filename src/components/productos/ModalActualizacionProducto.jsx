@@ -2,89 +2,101 @@ import React from "react";
 import { Modal, Form, Button } from "react-bootstrap";
 
 const ModalEdicionProducto = ({
-  mostrarModal,
-  setMostrarModal,
-  productoSeleccionado,
-  manejarCambioInput,
-  manejarCambioImagen,
-  manejarActualizarProducto,
+  mostrarModalEdicion,
+  setMostrarModalEdicion,
+  productoEditado,
+  manejarCambioInputEdicion,
+  actualizarProducto,
   errorCarga,
   laboratorios,
   presentaciones,
+
 }) => {
+  
   return (
-    <Modal show={mostrarModal} onHide={() => setMostrarModal(false)}>
+    <Modal show={mostrarModalEdicion} onHide={() => setMostrarModalEdicion(false)}>
       <Modal.Header closeButton>
         <Modal.Title>Editar Producto</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+
         <Form>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId="formNombreProducto">
             <Form.Label>Nombre del Producto</Form.Label>
             <Form.Control
               type="text"
               name="nombre_producto"
-              value={productoSeleccionado?.nombre_producto || ""}
-              onChange={manejarCambioInput}
+              value={productoEditado?.nombre_producto || ""}
+              onChange={manejarCambioInputEdicion}
               placeholder="Nombre del producto"
-              maxLength={40}
+              maxLength={30}
               required
             />
           </Form.Group>
 
-          <Form.Group className="mb-3">
+
+          <Form.Group className="mb-3" controlId="formLaboratorioProducto">
             <Form.Label>Laboratorio</Form.Label>
             <Form.Select
               name="id_laboratorio"
-              value={productoSeleccionado?.id_laboratorio || ""}
-              onChange={manejarCambioInput}
+              value={productoEditado?.id_laboratorio || ""}
+              onChange={manejarCambioInputEdicion}
               required
             >
-              <option value="">Seleccione un laboratorio</option>
-              {laboratorios?.map((lab) => (
-                <option key={lab.id_laboratorio} value={lab.id_laboratorio}>
-                  {lab.nombre_laboratorio}
+                <option value="">Selecciona un laboratorio</option>
+             {Array.isArray(laboratorios) && laboratorios.map((laboratorio) => (
+                <option key={laboratorio.id_laboratorio} value={laboratorio.id_laboratorio}>
+                  {laboratorio.nombre_laboratorio}
                 </option>
               ))}
+
             </Form.Select>
           </Form.Group>
 
-          <Form.Group className="mb-3">
+
+          <Form.Group className="mb-3" controlId="formPrecentacionProducto">
             <Form.Label>Presentación</Form.Label>
             <Form.Select
               name="id_presentacion"
-              value={productoSeleccionado?.id_presentacion || ""}
-              onChange={manejarCambioInput}
+              value={productoEditado?.id_presentacion || ""}
+              onChange={manejarCambioInputEdicion}
               required
             >
-              <option value="">Seleccione una presentación</option>
-              {presentaciones?.map((pre) => (
-                <option key={pre.id_presentacion} value={pre.id_presentacion}>
-                  {pre.nombre_presentacion}
+                <option value="">Selecciona una presentacion</option>
+             {Array.isArray(presentaciones) && presentaciones.map((presentacion) => (
+                <option key={presentacion.id_presentacion} value={presentacion.id_presentacion}>
+                  {presentacion.nombre_presentacion}
                 </option>
               ))}
+
             </Form.Select>
           </Form.Group>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Fecha de Vencimiento</Form.Label>
-            <Form.Control
-              type="date"
-              name="vencimiento"
-              value={productoSeleccionado?.vencimiento?.slice(0, 10) || ""}
-              onChange={manejarCambioInput}
-              required
-            />
-          </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formVencimientoProducto">
+               <Form.Label>Fecha de Vencimiento</Form.Label>
+               <Form.Control
+                      type="date"
+                      name="vencimiento"
+                      value={
+                        productoEditado?.vencimiento
+                          ? new Date(productoEditado.vencimiento)
+                              .toISOString()
+                              .slice(0, 10)
+                          : ""
+                      }
+                      onChange={manejarCambioInputEdicion}
+                    />
+               </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>Precio Unitario</Form.Label>
+            <Form.Label>Precio</Form.Label>
             <Form.Control
               type="number"
               name="precio_unitario"
-              value={productoSeleccionado?.precio_unitario || ""}
-              onChange={manejarCambioInput}
-              step="0.01"
+              value={productoEditado?.precio_unitario || ""}
+              onChange={manejarCambioInputEdicion}
+              min="1"
               required
             />
           </Form.Group>
@@ -94,30 +106,50 @@ const ModalEdicionProducto = ({
             <Form.Control
               type="number"
               name="stock"
-              value={productoSeleccionado?.stock || ""}
-              onChange={manejarCambioInput}
+              value={productoEditado?.stock || ""}
+              onChange={manejarCambioInputEdicion}
+                min="0"
               required
             />
           </Form.Group>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Imagen</Form.Label>
-            <Form.Control
-              type="file"
-              name="imagen"
-              onChange={manejarCambioImagen}
-              accept="image/*"
-            />
-          </Form.Group>
-
+            <Form.Group className="mb-3" controlId="formImagenProducto">
+              <Form.Label>Imagen</Form.Label>
+              {productoEditado?.imagen && (
+                <div>
+                  <img
+                    src={`data:image/png;base64,${productoEditado.imagen}`}
+                    alt="Imagen actual"
+                    style={{ maxWidth: '100px', marginBottom: '10px' }}
+                  />
+                </div>
+              )}
+              <Form.Control
+                type="file"
+                name="imagen"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                      manejarCambioInputEdicion({
+                        target: { name: 'imagen', value: reader.result.split(',')[1] }
+                      });
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                }}
+              />
+            </Form.Group>
           {errorCarga && <div className="text-danger">{errorCarga}</div>}
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={() => setMostrarModal(false)}>
+        <Button variant="secondary" onClick={() => setMostrarModalEdicion(false)}>
           Cancelar
         </Button>
-        <Button variant="primary" onClick={manejarActualizarProducto}>
+        <Button variant="primary" onClick={actualizarProducto}>
           Guardar Cambios
         </Button>
       </Modal.Footer>

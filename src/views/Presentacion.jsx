@@ -21,7 +21,7 @@ const Presentaciones = () => {
   const [mostrarModalEliminacion, setMostrarModalEliminacion] = useState(false);
 
   const [textoBusqueda, setTextoBusqueda] = useState('');
-  const [paginaActual, establecerPaginaActual] = useState(1);
+  const [paginaActual, setPaginaActual] = useState(1);
   const elementosPorPagina = 8;
 
   const obtenerPresentaciones = async () => {
@@ -84,13 +84,17 @@ const Presentaciones = () => {
   };
 
   const manejarCambioBusqueda = (e) => {
-    const texto = e.target.value.toLowerCase();
+    const texto = e.target.value.toLowerCase()//Cambia las mayusculas por minusculas 
+    .normalize("NFD")// Descompone caracteres acentuados
+    .replace(/[\u0300-\u036f]/g, ""); // Elimina los signos diacríticos (tildes);;
     setTextoBusqueda(texto);
-    const filtrados = listaPresentaciones.filter(lab =>
-      lab.nombre_presentacion?.toLowerCase().includes(texto)
-    );
+    const filtrados = listaPresentaciones.filter(presentacion =>{
+      const id = (presentacion.id_presentacion  || '').toString();
+     const nombre = ( presentacion.nombre_presentacion || '').toLowerCase()  .normalize("NFD").replace(/[\u0300-\u036f]/g, ""); 
+     return id.includes(texto) || nombre.includes(texto);
+  });
     setPresentacionesFiltrados(filtrados);
-    establecerPaginaActual(1);
+    setPaginaActual(1);
   };
 
   const manejarCambioInputEdicion = (e) => {
@@ -136,7 +140,7 @@ const Presentaciones = () => {
 
   return (
     <>
-      <Container className="mt-5">
+      <Container className="mt-5" style={{ paddingBottom: '10px' }}>
         <h4>Presentaciones</h4>
         <Row>
           <Col lg={3}>
@@ -156,9 +160,16 @@ const Presentaciones = () => {
           totalElementos={listaPresentaciones.length}
           elementosPorPagina={elementosPorPagina}
           paginaActual={paginaActual}
-          establecerPaginaActual={establecerPaginaActual}
+          establecerPaginaActual={setPaginaActual}
           abrirModalEdicion={abrirModalEdicion}
           abrirModalEliminacion={abrirModalEliminacion}
+        />
+
+         <Paginacion
+          totalElementos={presentacionesFiltradas.length}
+          elementosPorPagina={elementosPorPagina}
+          paginaActual={paginaActual}
+          establecerPaginaActual={setPaginaActual}
         />
 
         <ModalRegistroPresentacion
@@ -186,18 +197,6 @@ const Presentaciones = () => {
         />
       </Container>
 
-      <div style={{
-        position: "fixed",
-        bottom: 0,
-        width: "100%",
-        backgroundColor: "white",
-        padding: "10px 0",
-        boxShadow: "0 -2px 10px rgba(0,0,0,0.1)",
-        zIndex: 1000,
-        textAlign: "center"
-      }}>
-    
-      </div>
     </>
   );
 };
