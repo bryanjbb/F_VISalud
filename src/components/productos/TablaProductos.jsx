@@ -24,7 +24,7 @@ const TablaProductos = ({
 
   return (
     <>
-      <Table striped bordered hover responsive>
+      <Table striped bordered hover responsive >
         <thead>
           <tr>
             <th>ID</th>
@@ -61,7 +61,7 @@ const TablaProductos = ({
               </td>
               <td className="text-center" style={{ whiteSpace: 'nowrap' }} > 
                 <Button
-                  variant="outline-warning"
+                  variant="outline-primary"
                   size="sm"
                   className="me-2 btn-animado"
                   onClick={() => abrirModalEdicion(producto)}
