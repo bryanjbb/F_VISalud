@@ -143,11 +143,15 @@ const Laboratorios = () => {
 
   return (
     <>
-      <Container className="mt-1" style={{ paddingBottom: '10px' }}>
+      <Container className="mt-1" style={{ paddingBottom: '10px', textAlign:"center"}}>
         <h4>Laboratorios</h4>
         <Row>
           <Col lg={3}>
-            <Button variant="primary" onClick={() => setMostrarModal(true)} style={{ width: '100%' }}>
+            <Button variant="success" 
+            onClick={() => setMostrarModal(true)} 
+            style={{ width: '100%' }}
+            className='btn-animado'>
+              
               Nuevo Laboratorio
             </Button>
           </Col>
@@ -166,6 +170,13 @@ const Laboratorios = () => {
           establecerPaginaActual={establecerPaginaActual}
           abrirModalEdicion={abrirModalEdicion}
           abrirModalEliminacion={abrirModalEliminacion}
+        />
+
+         <Paginacion
+          totalElementos={laboratoriosFiltrados.length}
+          elementosPorPagina={elementosPorPagina}
+          paginaActual={paginaActual}
+          establecerPaginaActual={establecerPaginaActual}
         />
 
         <ModalRegistroLaboratorio

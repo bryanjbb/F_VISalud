@@ -9,10 +9,6 @@ const TablaLaboratorios = ({
   laboratorios,
   cargando,
   error,
-  totalElementos,
-  elementosPorPagina,
-  paginaActual,
-  establecerPaginaActual,
   abrirModalEliminacion,
   abrirModalEdicion
 }) => {
@@ -42,9 +38,9 @@ const TablaLaboratorios = ({
               <td>{laboratorio.nombre_laboratorio}</td>
               <td className="text-center" style={{ whiteSpace: 'nowrap' }}>
                 <Button
-                  variant="outline-warning"
+                  variant="outline-primary"
                   size="sm"
-                  className="me-2"
+                  className="me-2 btn-animado"
                   onClick={() => abrirModalEdicion(laboratorio)}
                 >
                   <i className="bi bi-pencil"></i>
@@ -53,6 +49,7 @@ const TablaLaboratorios = ({
                 <Button
                   variant="outline-danger"
                   size="sm"
+                  className='btn-animado'
                   onClick={() => abrirModalEliminacion(laboratorio)}
                 >
                   <i className="bi bi-trash"></i>
@@ -63,14 +60,7 @@ const TablaLaboratorios = ({
         </tbody>
       </Table>
 
-      {totalElementos > elementosPorPagina && (
-        <Paginacion
-          totalElementos={totalElementos}
-          elementosPorPagina={elementosPorPagina}
-          paginaActual={paginaActual}
-          onPageChange={establecerPaginaActual}
-        />
-      )}
+      
     </>
   );
 };

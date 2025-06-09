@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Container, Nav, Navbar, Offcanvas } from "react-bootstrap";
-import logo from "/vite.svg"; // Importación del logo de la ferretería
+import logo from "../../assets/Logo.png"; // Importación del logo de la ferretería;
 import "bootstrap-icons/font/bootstrap-icons.css"; // Importación de íconos de Bootstrap
 import "../../App.css"; // Estilos personalizados de la aplicación
+
 
 const Encabezado = () => {
   // Estado para controlar el colapso del menú lateral
@@ -45,7 +46,7 @@ const Encabezado = () => {
           className="text-white"
           style={{ cursor: "pointer" }}
         >
-          <img alt="" src={logo} width="30" height="30" className="d-inline-block align-top" />{" "}
+          <img alt="" src={logo} width="35" height="35" className="d-inline-block align-top" />{" "}
           <strong>Salud Total</strong>
         </Navbar.Brand>
 
@@ -78,7 +79,10 @@ const Encabezado = () => {
             {/* Navegación */}
             <Nav className="justify-content-end flex-grow-1 pe-3">
               {/* Opción de navegación a Inicio */}
-              <Nav.Link
+          
+          {estaLogueado ? (
+            <>
+                <Nav.Link
                 onClick={() => navegarA("/inicio")}
                 className={estaColapsado ? "text-black" : "text-white"}
               >
@@ -123,7 +127,7 @@ const Encabezado = () => {
                 <strong>Ventas</strong>
               </Nav.Link>
 
-                            <Nav.Link
+                 <Nav.Link
                 onClick={() => navegarA("/estadisticas")}
                 className={estaColapsado ? "text-black" : "text-white"}
               >
@@ -131,27 +135,23 @@ const Encabezado = () => {
                 <strong>Estadisticas</strong>
               </Nav.Link>
 
-
-              {/* Lógica condicional para mostrar Cerrar Sesión o Iniciar Sesión */}
-              {estaLogueado ? (
-                // Opción de cerrar sesión
-                <Nav.Link
-                  onClick={cerrarSesion}
-                  className={estaColapsado ? "text-black" : "text-white"}
-                >
-                  Cerrar Sesión
-                </Nav.Link>
-              ) : (
-                ubicacion.pathname === "/" && (
-                  // Opción de iniciar sesión (solo en la ruta raíz)
-                  <Nav.Link
-                    onClick={() => navegarA("/")}
-                    className={estaColapsado ? "text-black" : "text-white"}
-                  >
-                    Iniciar Sesión
-                  </Nav.Link>
-                )
-              )}
+              <Nav.Link
+              onClick={cerrarSesion}
+              className={estaColapsado ? "text-black": "text-white"}
+              >
+                {estaColapsado ? <i className="bi-box-arrow-in-right me-2"></i>:null}
+                <strong>Cerrar sesión</strong>
+              </Nav.Link>
+            </>
+          ) : (
+            <Nav.Link onClick={() => navegarA("/")}
+            className= {estaColapsado ? "text-black" : "text-white"}
+            >
+              <i className="bi-box-arrow-in-right me-2"></i>
+              <strong>Iniciar Sesión</strong>
+              </Nav.Link>
+          ) 
+        }
             </Nav>
           </Offcanvas.Body>
         </Navbar.Offcanvas>
