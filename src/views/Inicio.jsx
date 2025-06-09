@@ -23,8 +23,8 @@ const Inicio = () => {
 
   return (
     <Container>
-      <h1>¡Bienvenido, {nombreUsuario}!</h1>
-      <h4>Wuenas</h4>
+      <h1>Wuenas, {nombreUsuario}!</h1>
+
 
     </Container>
   );

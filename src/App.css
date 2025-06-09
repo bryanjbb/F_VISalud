@@ -1,7 +1,5 @@
 .color-navbar {
-  background-color: #FFE53B;
-background-image: linear-gradient(90deg, #FFE53B 0%, #FF2525 74%);
-
+background: linear-gradient(90deg  #62CBEA , #B0BEC5 , #E5E5E5 , #ABB2BF 10 );
 }
 
 .color-texto-marca {
@@ -13,10 +11,10 @@ background-image: linear-gradient(90deg, #FFE53B 0%, #FF2525 74%);
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-  background-color: #f9f9fc;
+  background-color: 	#3EC1D3;
 }
 .table-striped tbody tr:nth-of-type(even) {
-  background-color: #ffffff;
+  background-color: #3EC1D3;
 }
 /* Animacion de los botones */
 .btn-animado {
@@ -34,3 +32,15 @@ background-image: linear-gradient(90deg, #FFE53B 0%, #FF2525 74%);
   transition: all 0.3s ease-in-out;
   cursor: pointer;
 }
+
+body {
+  background: linear-gradient(90deg,#F0F4F8 -15%, #62CBEA  , #62CBEA , #B0BEC5 , #E5E5E5 150% );
+}
+
+
+
+
+
+
+
+
