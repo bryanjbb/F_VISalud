@@ -140,16 +140,26 @@ const Presentaciones = () => {
 
   return (
     <>
-      <Container className="mt-5" style={{ paddingBottom: '10px' }}>
+      <Container className="mt-1" 
+      style={{ paddingBottom: '10px',
+         textAlign:"center"}}
+      >
         <h4>Presentaciones</h4>
+        
         <Row>
           <Col lg={3}>
-            <Button variant="primary" onClick={() => setMostrarModal(true)} style={{ width: '100%' }}>
+            <Button variant="success"
+            onClick={() => setMostrarModal(true)}
+            style={{ width: '100%' }}
+            className='btn-animado'
+            >
               Nueva Presentacion
             </Button>
           </Col>
           <Col lg={5}>
-            <CuadroBusquedas textoBusqueda={textoBusqueda} manejarCambioBusqueda={manejarCambioBusqueda} />
+            <CuadroBusquedas textoBusqueda={textoBusqueda}
+             manejarCambioBusqueda={manejarCambioBusqueda}
+              />
           </Col>
         </Row>
 

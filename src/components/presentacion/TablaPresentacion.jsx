@@ -7,10 +7,6 @@ const TablaPresentaciones = ({
   presentaciones,
   cargando,
   error,
-  totalElementos,
-  elementosPorPagina,
-  paginaActual,
-  establecerPaginaActual,
   abrirModalEliminacion,
   abrirModalEdicion
 }) => {
@@ -39,9 +35,9 @@ const TablaPresentaciones = ({
               <td>{presentacion.nombre_presentacion}</td>
               <td className="text-center" style={{ whiteSpace: 'nowrap' }}>
                 <Button
-                  variant="outline-warning"
+                  variant="outline-primary"
                   size="sm"
-                  className="me-2"
+                  className="me-2 btn-animado"
                   onClick={() => abrirModalEdicion(presentacion)}
                 >
                   <i className="bi bi-pencil"></i>
@@ -49,6 +45,7 @@ const TablaPresentaciones = ({
                 <Button
                   variant="outline-danger"
                   size="sm"
+                  className='btn-animado'
                   onClick={() => abrirModalEliminacion(presentacion)}
                 >
                   <i className="bi bi-trash"></i>
