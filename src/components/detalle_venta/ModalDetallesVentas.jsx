@@ -29,8 +29,8 @@ const ModalDetallesVenta = ({ mostrarModal, setMostrarModal, detalles, cargandoD
               </thead>
               <tbody>
                 {detalles.map((detalle) => (
-                  <tr key={detalle.id_detalle_venta}>
-                    <td>{detalle.id_detalle_venta}</td>
+                  <tr key={detalle.id_detalleventa}>
+                    <td>{detalle.id_detalleventa}</td>
                     <td>{detalle.nombre_producto}</td>
                     <td>{detalle.cantidad}</td>
                     <td>C$ {detalle.precio_unitario.toFixed(2)}</td>

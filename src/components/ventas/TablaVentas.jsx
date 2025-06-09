@@ -4,14 +4,17 @@ import { Table, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
+   const usuarioLogueado = localStorage.getItem("usuario") || "Usuario Desconocido";
 
-const TablaVentas = ({ ventas, cargando, error, obtenerDetalles, abrirModalEliminacion, abrirModalActualizacion  }) => {
+const TablaVentas = ({ ventas, cargando, error, obtenerDetalles, abrirModalEliminacion,
+   abrirModalActualizacion  }) => {
   if (cargando) {
     return <div>Cargando ventas...</div>; // Muestra mensaje mientras carga
   }
   if (error) {
     return <div>Error: {error}</div>;     // Muestra error si ocurre
   }
+console.log("Datos de ventas recibidos:", ventas);
 
   // Renderizado de la tabla con los datos recibidos
   return (
@@ -39,8 +42,8 @@ const TablaVentas = ({ ventas, cargando, error, obtenerDetalles, abrirModalElimi
             hour12: true
             })}</td>
 
-            <td>{venta.usuario}</td>
-            <td>C$ {venta.total_venta.toFixed(2)}</td>
+            <td>{venta.usuario || "Usuario desconocido"}</td>
+            <td>C$ {venta.total_venta}</td>
             <td  >
             
                 <div className="text-center" style={{ whiteSpace: 'nowrap' }} >
