@@ -8,6 +8,7 @@ import Laboratorios from "./views/Laboratorio";
 import Presentaciones from "./views/Presentacion";
 import Ventas from "./views/Ventas";
 import Estadisticas from "./views/Estadisticas";
+import RutasProtegidas from "./components/rutas/RutaProtegida";
 
 import './App.css';
 
@@ -21,12 +22,12 @@ const App = () => {
         <Routes>
         
         <Route path="/" element={<Login />} />
-        <Route path="/inicio" element={<Inicio />} />
-        <Route path="/productos" element={<Productos />} />
-        <Route path="/laboratorios" element={<Laboratorios />} />
-        <Route path="/presentaciones" element={<Presentaciones />} />
-        <Route path="/ventas" element={<Ventas />} />
-         <Route path="/estadisticas" element={<Estadisticas />} />
+        <Route path="/inicio" element={<RutasProtegidas vista={< Inicio />} />} />
+        <Route path="/productos" element={<RutasProtegidas vista={<Productos />} />} />
+        <Route path="/laboratorios" element={<RutasProtegidas vista={<Laboratorios />} />} />
+        <Route path="/presentaciones" element={<RutasProtegidas vista={<Presentaciones />} />} />
+        <Route path="/ventas" element={<RutasProtegidas vista={<Ventas />} />} />
+         <Route path="/estadisticas" element={<RutasProtegidas vista={<Estadisticas />} />} />
 
 
 
