@@ -144,9 +144,14 @@ const Laboratorios = () => {
   return (
     <>
       <Container className="mt-1" style={{ paddingBottom: '10px', textAlign:"center"}}>
-        <h4>Laboratorios</h4>
+        <br />
+       <Col xs={12} sm={1} md={1} lg={3}> <h4>Laboratorios</h4> </Col>
         <Row>
-          <Col lg={3}>
+          <Col lg={6}>
+            <CuadroBusquedas textoBusqueda={textoBusqueda} manejarCambioBusqueda={manejarCambioBusqueda} />
+          </Col>
+              <Col xs={12} sm={1} md={1} lg={3}> </Col>
+           <Col lg={3}>
             <Button variant="success" 
             onClick={() => setMostrarModal(true)} 
             style={{ width: '100%' }}
@@ -154,9 +159,6 @@ const Laboratorios = () => {
               
               Nuevo Laboratorio
             </Button>
-          </Col>
-          <Col lg={5}>
-            <CuadroBusquedas textoBusqueda={textoBusqueda} manejarCambioBusqueda={manejarCambioBusqueda} />
           </Col>
         </Row>
 

@@ -6,163 +6,137 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 
 const ModalActualizacionVenta = ({
-  mostrarModal,
-  setMostrarModal,
+  show,
+  onHide,
   venta,
-  detallesVenta,
-  setDetallesVenta,
-  actualizarVenta,
-  errorCarga,
-  laboratorios,
-  presentaciones,
-  productos
+  detalles = [],
+  setDetalles,
+  onGuardar,
+  error,
+  usuarios = [],
+  productos = []
 }) => {
-  const [ventaActualizada, setVentaActualizada] = useState({
-    id_venta: venta?.id_venta || '',
-    id_laboratorio: venta?.id_laboratorio || '',
-    id_presentacion: venta?.id_presentacion || '',
+  const [ventaAct, setVentaAct] = useState({
+    numero_factura: venta?.numero_factura || '',
+    id_usuario: venta?.id_usuario || '',
     fecha_venta: venta?.fecha_venta ? new Date(venta.fecha_venta) : new Date(),
     total_venta: venta?.total_venta || 0
   });
+  const [userSel, setUserSel] = useState(null);
+  const [prodSel, setProdSel] = useState(null);
+  const [tmpDet, setTmpDet] = useState({ id_producto: '', cantidad: '', precio_unitario: '' });
+  const [editIdx, setEditIdx] = useState(null);
+  const [msgErr, setMsgErr] = useState('');
 
-  const [laboratorioSeleccionado, setLaboratorioSeleccionado] = useState(null);
-  const [presentacionSeleccionada, setPresentacionSeleccionada] = useState(null);
-  const [productoSeleccionado, setProductoSeleccionado] = useState(null);
-  const [nuevoDetalle, setNuevoDetalle] = useState({ id_producto: '', cantidad: '', precio_unitario: '' });
-  const [editandoDetalle, setEditandoDetalle] = useState(null);
-  const [mensajeError, setMensajeError] = useState('');
+  // Total dinámico
+  const total = detalles.reduce((sum, d) => sum + d.cantidad * d.precio_unitario, 0);
 
-const totalVenta = (detallesVenta || []).reduce(
-  (acc, item) => acc + item.precio_unitario * item.cantidad,
-  0
-);
-
+  // Inicializar al abrir
   useEffect(() => {
-    if (venta && laboratorios.length > 0 && presentaciones.length > 0) {
-      setLaboratorioSeleccionado({ value: venta.id_laboratorio, label: venta.nombre_laboratorio });
-      setPresentacionSeleccionada({ value: venta.id_presentacion, label: venta.nombre_presentacion });
-      setVentaActualizada({
-        id_venta: venta.id_venta || '',
-        id_laboratorio: venta.id_laboratorio || '',
-        id_presentacion: venta.id_presentacion || '',
-        fecha_venta: venta?.fecha_venta ? new Date(venta.fecha_venta) : new Date(),
-        total_venta: parseFloat(venta.total_venta) || 0
+    if (venta && usuarios.length) {
+      setUserSel({ value: venta.id_usuario, label: venta.nombre_usuario });
+      setVentaAct({
+        numero_factura: venta.numero_factura,
+        id_usuario: venta.id_usuario,
+        fecha_venta: new Date(venta.fecha_venta),
+        total_venta: venta.total_venta
       });
     }
-  }, [venta, laboratorios, presentaciones]);
+  }, [venta, usuarios]);
 
-  const cargarLaboratorios = (input, cb) => {
-    const filtrados = laboratorios.filter(l => l.nombre_laboratorio.toLowerCase().includes(input.toLowerCase()));
-    cb(filtrados.map(l => ({ value: l.id_laboratorio, label: l.nombre_laboratorio })));
+  // Loaders para AsyncSelect
+  const loadUsers = (input, cb) =>
+    cb(
+      usuarios
+        .filter(u => u.nombre_usuario.toLowerCase().includes(input.toLowerCase()))
+        .map(u => ({ value: u.id_usuario, label: u.nombre_usuario }))
+    );
+  const loadProds = (input, cb) =>
+    cb(
+      productos
+        .filter(p => p.nombre_producto.toLowerCase().includes(input.toLowerCase()))
+        .map(p => ({ value: p.id_producto, label: p.nombre_producto, precio: p.precio_unitario }))
+    );
+
+  // Handlers
+  const onUserChange = sel => {
+    setUserSel(sel);
+    setVentaAct(prev => ({ ...prev, id_usuario: sel?.value || '' }));
   };
-
-  const cargarPresentaciones = (input, cb) => {
-    const filtrados = presentaciones.filter(p => p.nombre_presentacion.toLowerCase().includes(input.toLowerCase()));
-    cb(filtrados.map(p => ({ value: p.id_presentacion, label: p.nombre_presentacion })));
+  const onProdChange = sel => {
+    setProdSel(sel);
+    setTmpDet(prev => ({ ...prev, id_producto: sel.value, precio_unitario: sel.precio }));
   };
+  const onDetChange = e =>
+    setTmpDet(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const cargarProductos = (input, cb) => {
-    const filtrados = productos.filter(p => p.nombre_producto.toLowerCase().includes(input.toLowerCase()));
-    cb(filtrados.map(p => ({
-      value: p.id_producto,
-      label: p.nombre_producto,
-      precio: p.precio_unitario
-    })));
-  };
-
-  const manejarCambioLaboratorio = (s) => {
-    setLaboratorioSeleccionado(s);
-    setVentaActualizada(prev => ({ ...prev, id_laboratorio: s ? s.value : '' }));
-  };
-
-  const manejarCambioPresentacion = (s) => {
-    setPresentacionSeleccionada(s);
-    setVentaActualizada(prev => ({ ...prev, id_presentacion: s ? s.value : '' }));
-  };
-
-  const manejarCambioProducto = (s) => {
-    setProductoSeleccionado(s);
-    setNuevoDetalle(prev => ({
+  const addDetalle = () => {
+    if (!tmpDet.id_producto || tmpDet.cantidad <= 0) {
+      setMsgErr('Cantidad inválida');
+      return;
+    }
+    setDetalles(prev => [
       ...prev,
-      id_producto: s ? s.value : '',
-      precio_unitario: s ? s.precio : ''
-    }));
+      {
+        id_producto: tmpDet.id_producto,
+        nombre_producto: prodSel.label,
+        cantidad: parseInt(tmpDet.cantidad),
+        precio_unitario: parseFloat(tmpDet.precio_unitario)
+      }
+    ]);
+    setTmpDet({ id_producto: '', cantidad: '', precio_unitario: '' });
+    setProdSel(null);
   };
 
-  const manejarCambioDetalle = (e) => {
-    const { name, value } = e.target;
-    setNuevoDetalle(prev => ({ ...prev, [name]: value }));
+  const startEdit = (i, d) => {
+    setEditIdx(i);
+    setTmpDet({ id_producto: d.id_producto, cantidad: d.cantidad, precio_unitario: d.precio_unitario });
+    setProdSel({ value: d.id_producto, label: d.nombre_producto, precio: d.precio_unitario });
   };
-
-  const manejarAgregarDetalle = () => {
-    if (!nuevoDetalle.id_producto || !nuevoDetalle.cantidad || nuevoDetalle.cantidad <= 0) {
-      alert("Selecciona un producto y una cantidad válida.");
-      return;
-    }
-    const producto = productos.find(p => p.id_producto === nuevoDetalle.id_producto);
-    if (producto && nuevoDetalle.cantidad > producto.stock) {
-      alert(`Stock insuficiente de ${producto.nombre_producto}. Disponibles: ${producto.stock}`);
-      return;
-    }
-    setDetallesVenta(prev => [...prev, {
-      id_producto: nuevoDetalle.id_producto,
-      nombre_producto: productoSeleccionado.label,
-      cantidad: parseInt(nuevoDetalle.cantidad),
-      precio_unitario: parseFloat(nuevoDetalle.precio_unitario)
-    }]);
-    setNuevoDetalle({ id_producto: '', cantidad: '', precio_unitario: '' });
-    setProductoSeleccionado(null);
-  };
-
-  const eliminarDetalle = (index) => {
-    setDetallesVenta(prev => prev.filter((_, i) => i !== index));
-  };
-
-  const iniciarEdicionDetalle = (index, detalle) => {
-    setEditandoDetalle({ index, detalle });
-    setNuevoDetalle({
-      id_producto: detalle.id_producto,
-      cantidad: detalle.cantidad.toString(),
-      precio_unitario: detalle.precio_unitario.toString()
-    });
-    setProductoSeleccionado({
-      value: detalle.id_producto,
-      label: detalle.nombre_producto,
-      precio: detalle.precio_unitario
-    });
-  };
-
-  const guardarEdicionDetalle = () => {
-    if (!editandoDetalle) return;
-    if (!nuevoDetalle.id_producto || !nuevoDetalle.cantidad || nuevoDetalle.cantidad <= 0) {
-      alert("Selecciona un producto y una cantidad válida.");
-      return;
-    }
-    const producto = productos.find(p => p.id_producto === nuevoDetalle.id_producto);
-    if (producto && nuevoDetalle.cantidad > producto.stock) {
-      alert(`Stock insuficiente de ${producto.nombre_producto}. Disponibles: ${producto.stock}`);
-      return;
-    }
-    const nuevosDetalles = [...detallesVenta];
-    nuevosDetalles[editandoDetalle.index] = {
-      id_producto: nuevoDetalle.id_producto,
-      nombre_producto: productoSeleccionado.label,
-      cantidad: parseInt(nuevoDetalle.cantidad),
-      precio_unitario: parseFloat(nuevoDetalle.precio_unitario)
+  const saveEdit = () => {
+    if (editIdx === null) return;
+    const updated = [...detalles];
+    updated[editIdx] = {
+      id_producto: tmpDet.id_producto,
+      nombre_producto: prodSel.label,
+      cantidad: parseInt(tmpDet.cantidad),
+      precio_unitario: parseFloat(tmpDet.precio_unitario)
     };
-    setDetallesVenta(nuevosDetalles);
-    setEditandoDetalle(null);
-    setNuevoDetalle({ id_producto: '', cantidad: '', precio_unitario: '' });
-    setProductoSeleccionado(null);
+    setDetalles(updated);
+    setEditIdx(null);
+    setTmpDet({ id_producto: '', cantidad: '', precio_unitario: '' });
+    setProdSel(null);
+  };
+
+  const formatDate = d => d.toISOString().slice(0, 19).replace('T', ' ');
+
+  const handleSave = async () => {
+    if (!detalles.length) {
+      setMsgErr('Agrega al menos un producto');
+      return;
+    }
+    setMsgErr('');
+    try {
+      const payload = {
+        ...ventaAct,
+        fecha_venta: formatDate(ventaAct.fecha_venta),
+        total_venta: total,
+        detalles: detalles.map(d => ({
+          id_producto: d.id_producto,
+          cantidad: d.cantidad,
+          precio_unitario: d.precio_unitario
+        }))
+      };
+      const res = await axios.put(`/api/ventas/${ventaAct.numero_factura}`, payload);
+      onHide();
+      onGuardar(res.data);
+    } catch (e) {
+      setMsgErr(e.response?.data?.mensaje || 'Error actualizando');
+    }
   };
 
   return (
-    <Modal show={mostrarModal} onHide={() => {
-      setMostrarModal(false);
-      setNuevoDetalle({ id_producto: '', cantidad: '', precio_unitario: '' });
-      setProductoSeleccionado(null);
-      setEditandoDetalle(null);
-    }} fullscreen>
+    <Modal show={show} onHide={onHide} fullscreen>
       <Modal.Header closeButton>
         <Modal.Title>Actualizar Venta</Modal.Title>
       </Modal.Header>
@@ -170,132 +144,113 @@ const totalVenta = (detallesVenta || []).reduce(
         <Form>
           <Row>
             <Col md={4}>
-              <Form.Label>Laboratorio</Form.Label>
+              <Form.Label>Usuario</Form.Label>
               <AsyncSelect
-                cacheOptions defaultOptions
-                loadOptions={cargarLaboratorios}
-                onChange={manejarCambioLaboratorio}
-                value={laboratorioSeleccionado}
-                placeholder="Buscar laboratorio..."
+                cacheOptions
+                defaultOptions
+                loadOptions={loadUsers}
+                onChange={onUserChange}
+                value={userSel}
                 isClearable
               />
             </Col>
             <Col md={4}>
-              <Form.Label>Presentación</Form.Label>
-              <AsyncSelect
-                cacheOptions defaultOptions
-                loadOptions={cargarPresentaciones}
-                onChange={manejarCambioPresentacion}
-                value={presentacionSeleccionada}
-                placeholder="Buscar presentación..."
-                isClearable
-              />
-            </Col>
-            <Col md={4}>
-              <Form.Label>Fecha</Form.Label>
+              <Form.Label>Fecha de Venta</Form.Label>
               <DatePicker
-                selected={ventaActualizada.fecha_venta}
-                onChange={date => setVentaActualizada(prev => ({ ...prev, fecha_venta: date }))}
-                className="form-control"
-                dateFormat="dd/MM/yyyy HH:mm"
+                selected={ventaAct.fecha_venta}
+                onChange={d => setVentaAct(prev => ({ ...prev, fecha_venta: d }))}
                 showTimeSelect
-                timeFormat="HH:mm"
-                timeIntervals={15}
+                dateFormat="dd/MM/yyyy HH:mm"
+                className="form-control"
               />
             </Col>
           </Row>
-
           <hr />
-          <h5>{editandoDetalle ? "Editar Detalle" : "Agregar Detalle"}</h5>
+          <h5>{editIdx !== null ? 'Editar Detalle' : 'Agregar Detalle'}</h5>
           <Row>
             <Col md={4}>
-              <Form.Label>Producto</Form.Label>
               <AsyncSelect
-                cacheOptions defaultOptions
-                loadOptions={cargarProductos}
-                onChange={manejarCambioProducto}
-                value={productoSeleccionado}
-                placeholder="Buscar producto..."
+                cacheOptions
+                defaultOptions
+                loadOptions={loadProds}
+                onChange={onProdChange}
+                value={prodSel}
+                isDisabled={editIdx !== null}
                 isClearable
-                isDisabled={!!editandoDetalle}
               />
             </Col>
-            <Col md={3}>
-              <Form.Label>Cantidad</Form.Label>
-              <FormControl type="number" name="cantidad" value={nuevoDetalle.cantidad} onChange={manejarCambioDetalle} min={1} />
+            <Col md={2}>
+              <FormControl
+                name="cantidad"
+                type="number"
+                value={tmpDet.cantidad}
+                onChange={onDetChange}
+                min={1}
+                placeholder="Cantidad"
+              />
             </Col>
-            <Col md={3}>
-              <Form.Label>Precio</Form.Label>
-              <FormControl type="number" name="precio_unitario" value={nuevoDetalle.precio_unitario} disabled />
+            <Col md={2}>
+              <FormControl
+                name="precio_unitario"
+                type="number"
+                value={tmpDet.precio_unitario}
+                disabled
+                placeholder="Precio"
+              />
             </Col>
-            <Col md={2} className="d-flex align-items-end">
-              {editandoDetalle ? (
-                <Button onClick={guardarEdicionDetalle} variant="primary" className="w-100">Guardar</Button>
+            <Col md={2}>
+              {editIdx !== null ? (
+                <Button onClick={saveEdit}>Guardar</Button>
               ) : (
-                <Button onClick={manejarAgregarDetalle} variant="success" className="w-100">Agregar</Button>
+                <Button onClick={addDetalle}>Agregar</Button>
               )}
             </Col>
           </Row>
-
-          {detallesVenta?.length > 0 && (
-            <>
-              <h5 className="mt-4">Detalles Agregados</h5>
-              <Table striped bordered hover>
-                <thead>
-                  <tr>
-                    <th>Producto</th>
-                    <th>Cantidad</th>
-                    <th>Precio</th>
-                    <th>Subtotal</th>
-                    <th>Acciones</th>
+          {detalles.length > 0 && (
+            <Table striped bordered hover className="mt-3">
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>Cantidad</th>
+                  <th>Precio Unitario</th>
+                  <th>Subtotal</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                {detalles.map((d, i) => (
+                  <tr key={i}>
+                    <td>{d.nombre_producto}</td>
+                    <td>{d.cantidad}</td>
+                    <td>{d.precio_unitario.toFixed(2)}</td>
+                    <td>{(d.cantidad * d.precio_unitario).toFixed(2)}</td>
+                    <td>
+                      <Button size="sm" onClick={() => startEdit(i, d)}>
+                        Editar
+                      </Button>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {detallesVenta.map((d, i) => (
-                    <tr key={i}>
-                      <td>{d.nombre_producto}</td>
-                      <td>{d.cantidad}</td>
-                      <td>{d.precio_unitario.toFixed(2)}</td>
-                      <td>{(d.cantidad * d.precio_unitario).toFixed(2)}</td>
-                      <td>
-                        <Button variant="warning" size="sm" onClick={() => iniciarEdicionDetalle(i, d)} className="me-2">Editar</Button>
-                        <Button variant="danger" size="sm" onClick={() => eliminarDetalle(i)}>Eliminar</Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <td colSpan="4" className="text-end"><strong>Total:</strong></td>
-                    <td><strong>{totalVenta.toFixed(2)}</strong></td>
-                  </tr>
-                </tfoot>
-              </Table>
-            </>
+                ))}
+                <tr>
+                  <td colSpan={3} className="text-end">
+                    <strong>Total:</strong>
+                  </td>
+                  <td>{total.toFixed(2)}</td>
+                </tr>
+              </tbody>
+            </Table>
           )}
-
-          {errorCarga && <div className="text-danger mt-2">{errorCarga}</div>}
-          {mensajeError && <div className="alert alert-danger mt-3">{mensajeError}</div>}
+          {error && <div className="text-danger">{error}</div>}
+          {msgErr && <div className="alert alert-danger">{msgErr}</div>}
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={() => {
-          setMostrarModal(false);
-          setNuevoDetalle({ id_producto: '', cantidad: '', precio_unitario: '' });
-          setProductoSeleccionado(null);
-          setEditandoDetalle(null);
-        }}>Cancelar</Button>
-        <Button variant="primary" onClick={() => {
-          if (detallesVenta.length === 0) {
-            setMensajeError("No puedes actualizar una venta sin productos.");
-            return;
-          }
-          setMensajeError("");
-          actualizarVenta({
-            ...ventaActualizada,
-            total_venta: totalVenta
-          }, detallesVenta);
-        }}>Actualizar Venta</Button>
+        <Button variant="secondary" onClick={onHide}>
+          Cancelar
+        </Button>
+        <Button variant="primary" onClick={handleSave}>
+          Actualizar Venta
+        </Button>
       </Modal.Footer>
     </Modal>
   );

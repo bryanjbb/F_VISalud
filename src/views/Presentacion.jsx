@@ -144,10 +144,17 @@ const Presentaciones = () => {
       style={{ paddingBottom: '10px',
          textAlign:"center"}}
       >
+        <br />
         <h4>Presentaciones</h4>
         
         <Row>
-          <Col lg={3}>
+          <Col lg={5}>
+            <CuadroBusquedas textoBusqueda={textoBusqueda}
+             manejarCambioBusqueda={manejarCambioBusqueda}
+              />
+          </Col>
+             <Col xs={12} sm={1} md={2} lg={3}></Col>
+           <Col lg={3}>
             <Button variant="success"
             onClick={() => setMostrarModal(true)}
             style={{ width: '100%' }}
@@ -155,11 +162,6 @@ const Presentaciones = () => {
             >
               Nueva Presentacion
             </Button>
-          </Col>
-          <Col lg={5}>
-            <CuadroBusquedas textoBusqueda={textoBusqueda}
-             manejarCambioBusqueda={manejarCambioBusqueda}
-              />
           </Col>
         </Row>
 

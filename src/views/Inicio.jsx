@@ -23,6 +23,7 @@ const Inicio = () => {
 
   return (
     <Container>
+      <br />
       <h1>Wuenas, {nombreUsuario}!</h1>
 
 

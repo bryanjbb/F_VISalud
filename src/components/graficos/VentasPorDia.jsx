@@ -2,56 +2,54 @@ import { Card } from "react-bootstrap";
 import { Bar } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 
-const VentasPorDia = ({ fechas, total_ventas }) => {
-    console.log("Fechas:", fechas);
-console.log("Totales:", total_ventas);
-
+const VentasPorSemana = ({ fechas, total_ventas }) => {
   const data = {
-    labels: fechas, // Fechas de ventas
+    labels: fechas, // Ej: ["Enero - Semana 1", ...]
     datasets: [
       {
         label: 'Ventas (C$)',
-        data: total_ventas, // Total de ventas por día
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgb(75, 192, 192)',
+        data: total_ventas,
+        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+        borderColor: 'rgb(153, 102, 255)',
         borderWidth: 1,
       },
     ],
   };
 
-const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-  },
-  scales: {
-    y: {
-      beginAtZero: true,
-      title: {
-        display: true,
-        text: 'Córdobas (C$)',
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
       },
     },
-    x: {
-      title: {
-        display: true,
-        text: 'Fecha',
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: 'Córdobas (C$)',
+        },
       },
-      ticks: {
-        autoSkip: false, // ← ❗ Agrega esto
-        maxRotation: 90, // ← Gira las etiquetas si son muchas
-        minRotation: 45, // ← Opcional
+      x: {
+        title: {
+          display: true,
+          text: 'Semana',
+        },
+        ticks: {
+          autoSkip: false,
+          maxRotation: 90,
+          minRotation: 45,
+        },
       },
     },
-  },
-};
+  };
+
   return (
     <Card>
       <Card.Body>
-        <Card.Title>Ventas por Día</Card.Title>
-        <div style={{ height: "300px", justifyContent: "center", alignItems: "center", display: "flex" }}>
+        <Card.Title>Ventas Semanales por Mes</Card.Title>
+        <div style={{ height: "300px", display: "flex", justifyContent: "center", alignItems: "center" }}>
           <Bar data={data} options={options} />
         </div>
       </Card.Body>
@@ -59,4 +57,5 @@ const options = {
   );
 };
 
-export default VentasPorDia;
+export default VentasPorSemana;
+

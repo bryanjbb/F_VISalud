@@ -218,6 +218,10 @@ const Productos = () => {
     setProductosFiltrados(filtrados);
     setPaginaActual(1);
   };
+  const limpiarBusqueda = () => {
+  setTextoBusqueda("");
+  setProductosFiltrados(listaProductos);
+  };
 
   const productosPaginados = productosFiltrados.slice(
     (paginaActual - 1) * elementosPorPagina,
@@ -376,29 +380,31 @@ const generarPDFDetallesproducto = (producto) => {
     <>
 <Container className="mt-1" 
           style={{textAlign:"center"}}>
-<Col md={6}>
+<Col xs={12} sm={6} md={6} lg={4}>
+<br />
       <h4>Productos</h4>
 </Col>
         
         <Row>
          
-          <Col lg={5}>
+          <Col xs={12} sm={6} md={6} lg={6}>
             <CuadroBusquedas
               textoBusqueda={textoBusqueda}
               manejarCambioBusqueda={manejarCambioBusqueda}
             />
           </Col>
-          <Col md={4}></Col>
-          <Col lg={3}>
+          <Col xs={12} sm={1} md={2} lg={3}></Col>
+          <Col xs={12} sm={5} md={4} lg={3}>
           <Button variant="success" 
             onClick={() => setMostrarModal(true)} 
             style={{ width: "100%" }}
-            className='btn-animado'
+            className='btn-animado shadow-sm1'
             >
             <i class="bi bi-file-plus"></i> Agregar Producto 
             </Button></Col>
         </Row>
 
+ <br  />
         <TablaProductos
           productos={productosPaginados}
           cargando={cargando}
@@ -406,10 +412,11 @@ const generarPDFDetallesproducto = (producto) => {
           abrirModalEliminacion={abrirModalEliminacion}
           abrirModalEdicion={abrirModalEdicion}
         />
+        <br />
 <Row>
-    <Col md={6}></Col>
+    <Col xs={12} sm={1} md={1} lg={3}></Col>
 
-          <Col md={3}>
+          <Col xs={12} sm={5} md={5} lg={3}>
              <Button variant='primary'
                     className='me-3 btn-animado'
                     onClick={ exportarExelProductos}
@@ -419,15 +426,16 @@ const generarPDFDetallesproducto = (producto) => {
                   </Button>
                 </Col>
                 
+               
           
-                 <Col  lg={3} md={4} sm={4} xs={5}>
+        <Col xs={12} sm={5} md={5} lg={3}>
           <Button
             className="mb-3 btn-animado"
             onClick={generarPDFProductos}
             variant="secondary"
             style= {{width: "100%"}}
             >
-            Generar Reporte PDF 
+            <i className="bi bi-file-earmark-pdf"></i> Generar Reporte PDF 
           </Button>
           </Col>
           </Row>

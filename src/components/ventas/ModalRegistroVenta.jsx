@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Form, Button, Table, Row, Col, FormControl } from "react-bootstrap";
 import AsyncSelect from 'react-select/async';
 import DatePicker from 'react-datepicker';
@@ -23,7 +23,13 @@ const ModalRegistroVenta = ({
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
   const [nuevoDetalle, setNuevoDetalle] = useState({ id_producto: '', cantidad: '', precio_unitario: '' });
 
-  const nombreUsuario = localStorage.getItem("nombre_usuario") || "Usuario Desconocido";
+  const nombreUsuario = localStorage.getItem("nombre") || "Usuario Desconocido";
+  const id_usuario = localStorage.getItem("id_usuario");
+
+  // Actualiza nuevaVenta con id_usuario al montar el componente
+  useEffect(() => {
+    setNuevaVenta(prev => ({ prev, id_usuario }));
+  }, [id_usuario, setNuevaVenta]);
 
   const totalVenta = (detallesVenta || []).reduce(
     (acc, item) => acc + item.precio_unitario * item.cantidad,
@@ -182,6 +188,7 @@ const ModalRegistroVenta = ({
                 />
               </Form.Group>
             </Col>
+            
             <Col md={2}>
               <Form.Group className="mb-3" controlId="formCantidad">
                 <Form.Label>Cantidad</Form.Label>
@@ -208,8 +215,9 @@ const ModalRegistroVenta = ({
                 />
               </Form.Group>
             </Col>
-            <Col md={3} className="mb-3 ">
-              <Button variant="success" onClick={manejarAgregarDetalle} style={{ width: '100%' }}>
+            
+            <Col md={2} className="mb-3 ">
+              <Button variant="success" onClick={manejarAgregarDetalle} >
                 Agregar Producto
               </Button>
             </Col>

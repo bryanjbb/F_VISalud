@@ -14,7 +14,6 @@ const TablaVentas = ({ ventas, cargando, error, obtenerDetalles, abrirModalElimi
   if (error) {
     return <div>Error: {error}</div>;     // Muestra error si ocurre
   }
-console.log("Datos de ventas recibidos:", ventas);
 
   // Renderizado de la tabla con los datos recibidos
   return (
@@ -52,8 +51,18 @@ console.log("Datos de ventas recibidos:", ventas);
                     size="sm"
                     className='me-2 btn-animado'
                     onClick={() => obtenerDetalles(venta.numero_factura)}
+                    
                   >
                     <i className="bi bi-list-ul"></i>
+                  </Button>
+
+                  <Button
+                    variant="outline-primary"
+                    size="sm"
+                    className='me-2 btn-animado'
+                    onClick={() => abrirModalActualizacion(venta)}
+                  >
+                    <i className="bi bi-pencil"></i>
                   </Button>
 
                   <Button
@@ -65,14 +74,7 @@ console.log("Datos de ventas recibidos:", ventas);
                     <i className="bi bi-trash"></i>
                   </Button>
 
-                  <Button
-                    variant="outline-primary"
-                    size="sm"
-                    className='btn-animado'
-                    onClick={() => abrirModalActualizacion(venta)}
-                  >
-                    <i className="bi bi-pencil"></i>
-                  </Button>
+                  
                 </div>
               </td>
           </tr>

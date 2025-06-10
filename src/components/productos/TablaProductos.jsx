@@ -25,7 +25,7 @@ const TablaProductos = ({
   return (
     <>
       <Table striped bordered hover responsive >
-        <thead>
+        <thead xs={12} sm={6} md={6} lg={3}>
           <tr>
             <th>ID</th>
             <th>Nombre</th>
@@ -63,7 +63,7 @@ const TablaProductos = ({
                 <Button
                   variant="outline-primary"
                   size="sm"
-                  className="me-2 btn-animado"
+                  className="me-2 btn-animado shadow-sm3"
                   onClick={() => abrirModalEdicion(producto)}
                 >
                   <i className="bi bi-pencil"></i>
@@ -71,7 +71,7 @@ const TablaProductos = ({
                 <Button
                   variant="outline-danger"
                   size="sm"
-                  className='btn-animado'
+                  className='btn-animado shadow-sm3'
                   onClick={() => abrirModalEliminacion(producto)}
                 >
                   <i className="bi bi-trash"></i>

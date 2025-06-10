@@ -5,6 +5,7 @@ import LoginForm from "../components/login/LoginForm";
 import "../app.css";
 
 const Login = () => {
+  const [id_usuario, setid_Usuario] = useState("");
   const [nombreUsuario, setNombreUsuario] = useState("");
   const [contraseña, setContraseña] = useState("");
   const [error, setError] = useState(null);
@@ -27,6 +28,7 @@ const Login = () => {
 
       if (datos) {
         console.log("Usuario verificado correctamente");
+        localStorage.setItem("id_usuario", id_usuario);
         localStorage.setItem("usuario", nombreUsuario);
         localStorage.setItem("contraseña", contraseña);
         navegar("/inicio");

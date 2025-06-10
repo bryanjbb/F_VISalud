@@ -1,5 +1,5 @@
 .color-navbar {
-background: linear-gradient(90deg  #62CBEA , #B0BEC5 , #E5E5E5 , #ABB2BF 10 );
+background: linear-gradient(90deg, #F0F4F8 -19%, #62CBEA , #B0BEC5 , #E5E5E5 , #ABB2BF 240% );
 }
 
 .color-texto-marca {
@@ -35,6 +35,16 @@ background: linear-gradient(90deg  #62CBEA , #B0BEC5 , #E5E5E5 , #ABB2BF 10 );
 
 body {
   background: linear-gradient(90deg,#F0F4F8 -15%, #62CBEA  , #62CBEA , #B0BEC5 , #E5E5E5 150% );
+}
+
+.card-animada {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-animada:hover {
+  transform: scale(1.05); /* Leve aumento en tamaño */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Sombra sutil */
+  cursor: pointer;
 }
 
 
